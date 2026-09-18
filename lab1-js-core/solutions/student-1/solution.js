@@ -573,63 +573,115 @@ function runTests() {
 // ЗАПУСК
 // ============================================================
 
+// Тест 1
 console.log('=== Задание 1 ===');
 simpleTask();
 
+// Тесты 2.1–2.5
 console.log('\n=== Задание 2 ===');
+
+// Тест 2.1 — номер ревьюера
 console.log('2.1 Номер ревьюера:', getReviewerNumber(5, 1));
+
+// Тест 2.2 — номер варианта
 console.log('2.2 Вариант студента №1:', getVariant(1, 4));
+
+// Тест 2.3 — калькулятор
 console.log('2.3 10 + 5 =', calculate(10, 5, '+'));
 console.log('2.3 10 - 5 =', calculate(10, 5, '-'));
 console.log('2.3 10 * 5 =', calculate(10, 5, '*'));
 console.log('2.3 10 / 5 =', calculate(10, 5, '/'));
+
+// Тест 2.4 — площади
 console.log('2.4 Площадь круга:', calculateArea('circle', 5));
 console.log('2.4 Площадь прямоугольника:', calculateArea('rectangle', 5, 10));
 console.log('2.4 Площадь треугольника:', calculateArea('triangle', 5, 10));
+
+// Тест 2.5 — стрелочные функции
 console.log('2.5 Перевёрнутая строка:', reverseString('JavaScript'));
 console.log('2.5 Случайное число:', getRandomNumber(1, 10));
 
+
+// Тесты 3.1–3.2
 console.log('\n=== Задание 3 ===');
+
+// Тест 3.1 — книга
 console.log('3.1 Информация о книге:', book.getInfo());
 console.log('3.1 Доступность:', book.isAvailable);
 book.isAvailable = false;
 console.log('3.1 После изменения:', book.isAvailable);
 
+// Тест 3.2 — студент
 console.log('3.2 Студент:', student.name);
 console.log('3.2 Средний балл:', student.getAverageGrade());
 student.addGrade('physics', 88);
 console.log('3.2 Оценки:', student.grades);
 console.log('3.2 Новый средний балл:', student.getAverageGrade());
 
+
+// Тесты 4
 console.log('\n=== Задание 4 ===');
+
+// Тест 4 — работа с массивами
 processArrays();
 
+
+// Тесты 5.1–5.5
 console.log('\n=== Задание 5 ===');
+
+// Тест 5.1 — добавление задачи
 const manager = taskManager();
+console.log('5.1 Добавлена задача:', manager.addTask('Новая задача'));
 
-console.log('Добавлена задача:', manager.addTask('Новая задача'));
+// Тест 5.2 — выполнение задачи
 manager.completeTask(4);
-console.log('Выполненные задачи:', manager.getCompletedTasks());
-console.log('Ожидающие задачи:', manager.getPendingTasks());
-console.log('Статистика:', manager.getStats());
 
+// Тест 5.3 — получение выполненных/невыполненных задач
+console.log('5.3 Выполненные задачи:', manager.getCompletedTasks());
+console.log('5.3 Ожидающие задачи:', manager.getPendingTasks());
+
+// Тест 5.4 — статистика
+console.log('5.4 Статистика:', manager.getStats());
+
+
+// Тесты 6.1–6.4
 console.log('\n=== Задание 6 ===');
+
+// Тест 6.1–6.4 — классы
 const classes = taskClasses();
 
+
+// Тест 7.3 — фабрика автомобилей
 console.log('\n=== Задание 7 ===');
 const vehicleFactory = createVehicleFactory(classes.Car);
 const bmw = vehicleFactory('BMW', '320i', 2023);
+
+// Тест 7.3 — созданный автомобиль
 bmw.displayInfo();
 
+
+// Тесты 8.1–8.6 — вариант 1
 console.log('\n=== Задание 8 ===');
-console.log('test@example.com:', validateEmail('test@example.com'));
-console.log('user123@test.com:', validateEmail('user123@test.com'));
+
+// Тест 8.1 — корректный Email
+console.log('8.1 test@example.com:', validateEmail('test@example.com'));
+
+// Тест 8.2 — Email с цифрами
+console.log('8.2 user123@test.com:', validateEmail('user123@test.com'));
+
+// Тест 8.3 — Email со специальными символами
 console.log(
-    'user.name+test@example.com:',
+    '8.3 user.name+test@example.com:',
     validateEmail('user.name+test@example.com')
 );
-console.log('testexample.com:', validateEmail('testexample.com'));
-console.log('test@example:', validateEmail('test@example'));
-console.log('тест@example.com:', validateEmail('тест@example.com'));
+
+// Тест 8.4 — Email без @
+console.log('8.4 testexample.com:', validateEmail('testexample.com'));
+
+// Тест 8.5 — Email без доменной зоны
+console.log('8.5 test@example:', validateEmail('test@example'));
+
+// Тест 8.6 — Email с кириллицей
+console.log('8.6 тест@example.com:', validateEmail('тест@example.com'));
 
 runTests();
