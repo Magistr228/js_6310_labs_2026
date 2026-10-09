@@ -4,6 +4,7 @@ import {
   addCategory,
   addExpense,
   clearSessions,
+  deleteExpense,
   getCurrentMonthExpenses,
   getSession
 } from '../src/services/expenseStore.js';
@@ -35,5 +36,15 @@ describe('expense store', () => {
     addExpense(session, 300, 'транспорт', new Date(2026, 8, 30));
 
     expect(getCurrentMonthExpenses(session, new Date(2026, 9, 10))).toHaveLength(1);
+  });
+
+  test('assigns an identifier and deletes an expense by it', () => {
+    clearSessions();
+    const session = getSession(1);
+    const expense = addExpense(session, 100, 'продукты');
+
+    expect(expense.id).toBe(1);
+    expect(deleteExpense(session, 1)).toEqual(expense);
+    expect(deleteExpense(session, 1)).toBeNull();
   });
 });

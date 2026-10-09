@@ -1,6 +1,7 @@
 import {
   addCategory,
   addExpense,
+  deleteExpense,
   getCurrentMonthExpenses,
   getSession
 } from '../services/expenseStore.js';
@@ -44,7 +45,22 @@ const formatReport = (session) => {
   return `Отчёт за текущий месяц\n\nВсего: ${formatMoney(total)}\n\nПо категориям:\n${details.join('\n')}\n\nТоп-3:\n${top.join('\n')}`;
 };
 
-const helpText = 'Доступные команды:\n/add_expense — добавить расход\n/categories — категории и суммы за месяц\n/add_category — добавить свою категорию\n/report — отчёт за текущий месяц\n/cancel — отменить текущий ввод';
+const formatExpenses = (session) => {
+  if (session.expenses.length === 0) {
+    return 'Сохранённых расходов пока нет.';
+  }
+  const rows = session.expenses.map((expense) =>
+    `${expense.id}. ${expense.category} — ${formatMoney(expense.amount)} (${expense.date.toLocaleDateString('ru-RU')})`
+  );
+  return `Сохранённые расходы:\n${rows.join('\n')}\n\nУдалить запись: /delete_expense <номер>`;
+};
+
+const parseDeleteCommand = (input) => {
+  const match = input.match(/^\/delete_expense(?:\s+(\d+))?$/);
+  return match ? Number(match[1]) : null;
+};
+
+const helpText = 'Доступные команды:\n/add_expense — добавить расход\n/expenses — список сохранённых расходов\n/delete_expense <номер> — удалить расход\n/categories — категории и суммы за месяц\n/add_category — добавить свою категорию\n/report — отчёт за текущий месяц\n/cancel — отменить текущий ввод';
 
 const handleMessage = async (text, message, reply) => {
   const safeReply = typeof message === 'function' ? message : reply;
@@ -75,6 +91,27 @@ const handleMessage = async (text, message, reply) => {
   if (input === '/add_expense') {
     session.state = 'AWAITING_AMOUNT';
     await safeReply('Введите сумму расхода положительным числом, например: 250.50');
+    return;
+  }
+  if (input === '/expenses') {
+    session.state = 'IDLE';
+    await safeReply(formatExpenses(session));
+    return;
+  }
+  if (input.startsWith('/delete_expense')) {
+    const expenseId = parseDeleteCommand(input);
+    if (!expenseId) {
+      await safeReply('Укажите номер записи: /delete_expense <номер>. Номера можно посмотреть в /expenses.');
+      return;
+    }
+    const deletedExpense = deleteExpense(session, expenseId);
+    if (!deletedExpense) {
+      await safeReply(`Расход с номером ${expenseId} не найден. Откройте /expenses и повторите попытку.`);
+      return;
+    }
+    session.state = 'IDLE';
+    session.pendingAmount = null;
+    await safeReply(`Расход №${expenseId} (${deletedExpense.category}, ${formatMoney(deletedExpense.amount)}) удалён.`);
     return;
   }
   if (input === '/categories') {
@@ -130,5 +167,5 @@ const handleMessage = async (text, message, reply) => {
   await safeReply(`Неизвестная команда.\n\n${helpText}`);
 };
 
-export { formatCategories, formatReport, parseAmount };
+export { formatCategories, formatExpenses, formatReport, parseAmount };
 export default handleMessage;

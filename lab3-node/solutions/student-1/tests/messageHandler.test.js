@@ -60,6 +60,28 @@ describe('message handler', () => {
     expect(report).toContain('Топ-3');
   });
 
+  test('lists and deletes a saved expense by its number', async () => {
+    const reply = jest.fn();
+    const session = getSession(1);
+    session.expenses.push({ id: 4, amount: 300, category: 'продукты', date: new Date() });
+
+    await handleMessage('/expenses', message(1), reply);
+    expect(reply).toHaveBeenLastCalledWith(expect.stringContaining('4. продукты — 300.00 ₽'));
+
+    await handleMessage('/delete_expense 4', message(1), reply);
+    expect(reply).toHaveBeenLastCalledWith(expect.stringContaining('Расход №4'));
+    expect(session.expenses).toHaveLength(0);
+  });
+
+  test('validates a missing or unknown expense number', async () => {
+    const reply = jest.fn();
+    await handleMessage('/delete_expense', message(1), reply);
+    expect(reply).toHaveBeenLastCalledWith(expect.stringContaining('Укажите номер'));
+
+    await handleMessage('/delete_expense 99', message(1), reply);
+    expect(reply).toHaveBeenLastCalledWith(expect.stringContaining('не найден'));
+  });
+
   test('cancels a state and handles empty or unknown input', async () => {
     const reply = jest.fn();
     await handleMessage('/add_expense', message(1), reply);
