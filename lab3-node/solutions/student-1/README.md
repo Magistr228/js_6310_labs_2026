@@ -36,6 +36,6 @@ npm run test:coverage
 
 ## Примеры работы
 
-![Добавление расхода](images/add-expense.svg)
+![Добавление расхода](images/add-expense.png)
 
-![Месячный отчёт](images/report.svg)
+![Месячный отчёт](images/report.png)
