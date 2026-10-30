@@ -16,8 +16,9 @@ const runTelegramBot = () => {
     const reply = async (response) => {
       try {
         await bot.sendMessage(message.chat.id, response);
-      } catch (error) {
-        console.error('Не удалось отправить сообщение:', error.message);
+      } catch {
+        // Network failures must not stop message processing. The next update
+        // can be handled normally when the Telegram connection is restored.
       }
     };
     await handleMessage(message.text, message, reply);
